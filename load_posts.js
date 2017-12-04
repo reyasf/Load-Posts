@@ -46,7 +46,7 @@ $(this).text('Loading...');
 	$('ajax-pagination-container-'+ nxt_page).load(next_url + ' .product',  function() {
 		doing_ajax = true;
 
-	// Update page number and nextLink.
+	// Update nxt_page and next_url.
 	$('.products').append($('ajax-pagination-container-'+ nxt_page).html()).children().animate({ opacity:'1' },  1000);
 	$('ajax-pagination-container-'+ nxt_page).remove();
 
