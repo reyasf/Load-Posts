@@ -1,4 +1,4 @@
-function pbd_alp_init() {
+function ajax_pagination() {
  	global $wp_query;
 
  		$max =  $wp_query->max_num_pages;
@@ -7,13 +7,13 @@ function pbd_alp_init() {
 		
  		wp_localize_script(
  			'load-posts',
- 			'pbd_alp',
+ 			'ajax_pagination',
  			array(
- 				'startPage' => $paged,
- 				'maxPages' => $max,
- 				'nextLink' => next_posts($max, false)
+ 				'start' => $paged,
+ 				'max' => $max,
+ 				'nexturl' => next_posts($max, false)
  			)
  		);
 	
  }
- add_action('loop_start', 'pbd_alp_init');
+ add_action('loop_start', 'ajax_pagination');
