@@ -1,13 +1,13 @@
 jQuery(document).ready(function($) {
 
-// The number of the next page to load (/page/x/).
-var pageNum = parseInt(pbd_alp.startPage) + 1;
+// next page to load
+var nxt_page = parseInt(ajax_pagination.start) + 1;
 
 // The maximum number of pages the current query can return.
-var max = parseInt(pbd_alp.maxPages);
+var total = parseInt(ajax_pagination.max);
 
 // The link of the next page of posts.
-var nextLink = pbd_alp.nextLink;
+var next_url = ajax_pagination.nexturl;
 
 var doing_ajax = false;
 
@@ -16,12 +16,12 @@ var doing_ajax = false;
  * Replace the navigation with our own,
  * but only if there is at least one page of new posts to load.
  */
-if(pageNum <= max && $('.page-numbers').length  != 0) {
+if(nxt_page <= total && $('.page-numbers').length  != 0) {
 
 $('.main')
-.append('<div class="pbd-alp-placeholder-'+ pageNum +'"></div>')
+.append('<div class="ajax-pagination-container-'+ nxt_page +'"></div>')
 
-.append('<div class="clear"></div><p id="pbd-alp-load-posts"><a href="#">Load More</a></p>');
+.append('<div class="clear"></div><p id="ajax-pagination-posts"><a href="#">More</a></p>');
 
 // Remove the navigation.
 $('.pagination').remove();
@@ -32,42 +32,41 @@ $('.pagination').remove();
 /**
  * Load new posts when the link is clicked.
  */
-$('#pbd-alp-load-posts a').click(function() {
+$('#ajax-pagination-posts a').click(function() {
 
 doing_ajax = true;
 // If more posts to load
-if(pageNum <= max) {
+if(nxt_page <= total) {
 
 // Show that we're working.
 $(this).text('Loading...');
 
 
 
-	$('.pbd-alp-placeholder-'+ pageNum).load(nextLink + ' .product',  function() {
+	$('ajax-pagination-container-'+ nxt_page).load(next_url + ' .product',  function() {
 		doing_ajax = true;
 
 	// Update page number and nextLink.
-	$('.products').append($('.pbd-alp-placeholder-'+ pageNum).html()).children().animate({ opacity:'1' },  1000);
-	$('.pbd-alp-placeholder-'+ pageNum).remove();
-	initHover();
+	$('.products').append($('ajax-pagination-container-'+ nxt_page).html()).children().animate({ opacity:'1' },  1000);
+	$('ajax-pagination-container-'+ nxt_page).remove();
 
-	nextLink = nextLink.replace('/page/'+pageNum, '/page/'+ ++pageNum);
+	next_url = next_url.replace('/page/'+nxt_page, '/page/'+ ++nxt_page);
 	// Add a new placeholder, for when user clicks again.
 
-		if(pageNum>2)
+		if(nxt_page>2)
 		{
-			// Remove the traditional navigation.
-			$('#pbd-alp-load-posts').before('<div class="pbd-alp-placeholder-'+ pageNum +'"></div>')
+			// Remove the navigation.
+			$('#ajax-pagination-posts').before('<div class="ajax-pagination-container-'+ nxt_page +'"></div>')
 		}
 		else{
-			$('#pbd-alp-load-posts').before('<div class="clear"></div><div class="pbd-alp-placeholder-'+ pageNum +'"></div>')
+			$('#ajax-pagination-posts').before('<div class="clear"></div><div class="ajax-pagination-container-'+ nxt_page +'"></div>')
 		}
 
 		// Update the button message.
-		if(pageNum <= max) {
-			$('#pbd-alp-load-posts a').text('Load More').before('<div class="clear"></div>');
+		if(nxt_page <= total) {
+			$('#ajax-pagination-posts a').text('More').before('<div class="clear"></div>');
 		} else {
-			$('#pbd-alp-load-posts').fadeOut(200);
+			$('#ajax-pagination-posts').hide();
 		}
 		doing_ajax = false;
 	});
@@ -75,7 +74,7 @@ $(this).text('Loading...');
 } 
 else {
 	doing_ajax = false;
-	$('#pbd-alp-load-posts a').append('.');
+	$('#ajax-pagination-posts a').append('.');
 }
 
 return false;
@@ -84,7 +83,7 @@ return false;
 $(window).scroll(function() {
   if ($(window).scrollTop() >= $(document).height() - $(window).height() - 3000) {
 	if(!doing_ajax){
-   		$('#pbd-alp-load-posts a').trigger('click');
+   		$('#ajax-pagination-posts a').trigger('click');
                 $('.checht').hide();
    		return false;
    	}
